@@ -5,20 +5,12 @@
 #define PB2 2
 #define PB5 5
 
-int Key1State = HIGH;
-int Key2State = HIGH;
-int Key3State = HIGH;
-int Key4State = HIGH;
-
-int Key1 = KEY_1;
-int Key2 = KEY_2;
-int Key3 = KEY_3;
-int Key4 = KEY_4;
-
-int input = HIGH;
+int _inputs[4] = {LOW, LOW, LOW, LOW};
+int _keyStates[4] = {LOW, LOW, LOW, LOW};
+int _outputKeys[4] = {KEY_A, KEY_S, KEY_D, KEY_F};
 
 void setup() {
-  // don't need to set anything up to use DigiKeyboard
+  // I/O
   pinMode(PB0, INPUT);
   digitalWrite(PB0, HIGH);
   pinMode(PB1, INPUT);
@@ -29,74 +21,48 @@ void setup() {
   digitalWrite(PB5, HIGH);
 }
 
+void ReadInputs()
+{
+  _inputs[0] = digitalRead(PB0);
+  _inputs[1] = digitalRead(PB1);
+  _inputs[2] = digitalRead(PB2);
+  _inputs[3] = digitalRead(PB5);
+}
+
+void SendKey(int keyIndex)
+{
+  // Neg-edge
+  if (_inputs[keyIndex] == LOW && _keyStates[keyIndex] == HIGH)
+  {
+    // Press
+    DigiKeyboard.sendKeyPress(0);
+    DigiKeyboard.sendKeyPress(_outputKeys[keyIndex]);
+    _keyStates[keyIndex] = _inputs[keyIndex];
+  }
+  // Pos-edge
+  else if (_inputs[keyIndex] == HIGH && _keyStates[keyIndex] == LOW)
+  {
+    // Release
+    DigiKeyboard.sendKeyPress(0);
+    _keyStates[keyIndex] = _inputs[keyIndex];
+  }
+}
+
+void SendKeys()
+{
+  for (int i = 0; i < 4; i++)
+  {
+    SendKey(i);
+  }
+}
+
 void loop() {
   // this is generally not necessary but with some older systems it seems to
   // prevent missing the first character after a delay:
   //DigiKeyboard.sendKeyStroke(0);
-  
-  // Key 1
-  input = digitalRead(PB0);
-  if (input == LOW && Key1State == HIGH)
-  {
-    // Press
-    DigiKeyboard.sendKeyPress(0);
-    DigiKeyboard.sendKeyPress(Key1);
-    Key1State = input;
-  }
-  else if (input == HIGH && Key1State == LOW)
-  {
-    // Release
-    DigiKeyboard.sendKeyPress(0);
-    Key1State = input;
-  }
 
-  // Key 1
-  input = digitalRead(PB1);
-  if (input == LOW && Key2State == HIGH)
-  {
-    // Press
-    DigiKeyboard.sendKeyPress(0);
-    DigiKeyboard.sendKeyPress(Key2);
-    Key2State = input;
-  }
-  else if (input == HIGH && Key2State == LOW)
-  {
-    // Release
-    DigiKeyboard.sendKeyPress(0);
-    Key2State = input;
-  }
-
-  // Key 1
-  input = digitalRead(PB2);
-  if (input == LOW && Key3State == HIGH)
-  {
-    // Press
-    DigiKeyboard.sendKeyPress(0);
-    DigiKeyboard.sendKeyPress(Key3);
-    Key3State = input;
-  }
-  else if (input == HIGH && Key3State == LOW)
-  {
-    // Release
-    DigiKeyboard.sendKeyPress(0);
-    Key3State = input;
-  }
-
-  // Key 1
-  input = digitalRead(PB5);
-  if (input == LOW && Key4State == HIGH)
-  {
-    // Press
-    DigiKeyboard.sendKeyPress(0);
-    DigiKeyboard.sendKeyPress(Key4);
-    Key4State = input;
-  }
-  else if (input == HIGH && Key4State == LOW)
-  {
-    // Release
-    DigiKeyboard.sendKeyPress(0);
-    Key4State = input;
-  }
+  ReadInputs();
+  SendKeys();
 
   DigiKeyboard.delay(25);
 }
