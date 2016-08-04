@@ -2,7 +2,49 @@
 #include "parseKey.h"
 
 int main() {
-    struct KeyInfo key = ParseKey("");
-    printf("0x%x\n", key.Key);
-    printf("0x%x\n", key.Modifier);
+    struct KeyInfo key = ParseKeyInfo("b");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+
+    key = ParseKeyInfo("^2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("^+2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("!+^2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("!^#+2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+
+    key = ParseKeyInfo("<^2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("<^<+2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("<!<+<^2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo("<!<^<#<+2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+
+    key = ParseKeyInfo(">^2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo(">^>+2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo(">!>+>^2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
+    key = ParseKeyInfo(">!>^>#>+2");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
 }
