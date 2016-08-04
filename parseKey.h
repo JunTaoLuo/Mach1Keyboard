@@ -14,26 +14,26 @@
 #define MOD_GUI_RIGHT       (1<<7)
 
 // Keys
-#define KEY_A       4
-#define KEY_1       30
-#define KEY_ENTER   40
-#define KEY_SPACE   44
-#define KEY_F1      58
-#define KEY_F2      59
-#define KEY_F3      60
-#define KEY_F4      61
-#define KEY_F5      62
-#define KEY_F6      63
-#define KEY_F7      64
-#define KEY_F8      65
-#define KEY_F9      66
-#define KEY_F10     67
-#define KEY_F11     68
-#define KEY_F12     69
-#define KEY_UP_ARROW 0x52
-#define KEY_DOWN_ARROW 0x51
-#define KEY_LEFT_ARROW 0x50
-#define KEY_RIGHT_ARROW 0x4F
+#define KEY_A               4
+#define KEY_1               30
+#define KEY_ENTER           40
+#define KEY_SPACE           44
+#define KEY_F1              58
+#define KEY_F2              59
+#define KEY_F3              60
+#define KEY_F4              61
+#define KEY_F5              62
+#define KEY_F6              63
+#define KEY_F7              64
+#define KEY_F8              65
+#define KEY_F9              66
+#define KEY_F10             67
+#define KEY_F11             68
+#define KEY_F12             69
+#define KEY_UP_ARROW        0x52
+#define KEY_DOWN_ARROW      0x51
+#define KEY_LEFT_ARROW      0x50
+#define KEY_RIGHT_ARROW     0x4F
 
 // Typedef
 typedef unsigned char byte;
@@ -69,41 +69,41 @@ byte ParseKey(char key) {
 }
 
 byte ParseLiteralKey(char* key) {
-    if (strcmp("Enter", key) == 0)
+    if (!strcmp("Enter", key))
         return KEY_ENTER;
-    if (strcmp("Space", key) == 0)
+    if (!strcmp("Space", key))
         return KEY_SPACE;
-    if (strcmp("F1", key) == 0)
+    if (!strcmp("F1", key))
         return KEY_F1;
-    if (strcmp("F2", key) == 0)
+    if (!strcmp("F2", key))
         return KEY_F2;
-    if (strcmp("F3", key) == 0)
+    if (!strcmp("F3", key))
         return KEY_F3;
-    if (strcmp("F4", key) == 0)
+    if (!strcmp("F4", key))
         return KEY_F4;
-    if (strcmp("F5", key) == 0)
+    if (!strcmp("F5", key))
         return KEY_F5;
-    if (strcmp("F6", key) == 0)
+    if (!strcmp("F6", key))
         return KEY_F6;
-    if (strcmp("F7", key) == 0)
+    if (!strcmp("F7", key))
         return KEY_F7;
-    if (strcmp("F8", key) == 0)
+    if (!strcmp("F8", key))
         return KEY_F8;
-    if (strcmp("F9", key) == 0)
+    if (!strcmp("F9", key))
         return KEY_F9;
-    if (strcmp("F10", key) == 0)
+    if (!strcmp("F10", key))
         return KEY_F10;
-    if (strcmp("F11", key) == 0)
+    if (!strcmp("F11", key))
         return KEY_F11;
-    if (strcmp("F12", key) == 0)
+    if (!strcmp("F12", key))
         return KEY_F12;
-    if (strcmp("Up", key) == 0)
+    if (!strcmp("Up", key))
         return KEY_UP_ARROW;
-    if (strcmp("Down", key) == 0)
+    if (!strcmp("Down", key))
         return KEY_DOWN_ARROW;
-    if (strcmp("Left", key) == 0)
+    if (!strcmp("Left", key))
         return KEY_LEFT_ARROW;
-    if (strcmp("Right", key) == 0)
+    if (!strcmp("Right", key))
         return KEY_RIGHT_ARROW;
     
     return 0;
@@ -120,15 +120,32 @@ KeyInfo ParseKeyInfo(char* keyString) {
         byte parsedKey = 0;
         
         switch (keyChar) {
-            case '<' :
+            case '<':
                 index++;
                 keyInfo.Modifier |= ParseModifier(keyString[index]);
                 break;
-            case '>' :
+            case '>':
                 index++;
                 keyInfo.Modifier |= ParseModifier(keyString[index]) << 4;
                 break;
-            default :
+            case '{':
+            {
+                char keyLiteral[10];
+                memset(keyLiteral, 0, 10);
+
+                // Find the matching brace
+                char* openBrace = keyString + index;
+                char* closeBrace = strrchr(keyString, '}');
+                strncpy(keyLiteral, openBrace + 1, closeBrace - openBrace - 1);
+
+                // Parse it
+                parsedKey = ParseLiteralKey(keyLiteral);
+                if (parsedKey) {
+                   keyInfo.Key = parsedKey;
+                   return keyInfo;
+                }
+            }
+            default:
                 parsedKey = ParseModifier(keyChar);
                 if (parsedKey) {
                     keyInfo.Modifier |= parsedKey;
@@ -138,23 +155,6 @@ KeyInfo ParseKeyInfo(char* keyString) {
                 if (parsedKey) {
                     keyInfo.Key = parsedKey;
                     return keyInfo;
-                }
-                if (keyChar == '{') {
-                    char keyLiteral[10];
-                    memset(keyLiteral, 0, 10);
-                    char* openBrace = keyString + index;
-                    char* closeBrace;
-                    
-                    // Find the matching brace
-                    closeBrace = strrchr(keyString, '}');
-                    strncpy(keyLiteral, openBrace + 1, closeBrace - openBrace - 1);
-                    
-                    // Parse it
-                    parsedKey = ParseLiteralKey(keyLiteral);
-                    if (parsedKey) {
-                       keyInfo.Key = parsedKey;
-                       return keyInfo;
-                    }
                 }
         }
     }
