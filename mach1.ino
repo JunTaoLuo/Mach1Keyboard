@@ -5,9 +5,10 @@
 #define PB2 2
 #define PB5 5
 
-int _inputs[4] = {LOW, LOW, LOW, LOW};
-int _keyStates[4] = {LOW, LOW, LOW, LOW};
-int _outputKeys[4] = {KEY_A, KEY_S, KEY_D, KEY_F};
+byte _inputs[4] = {LOW, LOW, LOW, LOW};
+byte _keyStates[4] = {LOW, LOW, LOW, LOW};
+byte _outputKeys[4] = {KEY_A, KEY_S, KEY_D, KEY_F};
+byte _outputModifiers[4] = {MOD_SHIFT_LEFT, MOD_SHIFT_LEFT, MOD_SHIFT_LEFT, MOD_SHIFT_LEFT};
 
 void setup() {
   // I/O
@@ -36,7 +37,7 @@ void SendKey(int keyIndex)
   {
     // Press
     DigiKeyboard.sendKeyPress(0);
-    DigiKeyboard.sendKeyPress(_outputKeys[keyIndex]);
+    DigiKeyboard.sendKeyPress(_outputKeys[keyIndex], _outputModifiers[keyIndex]);
     _keyStates[keyIndex] = _inputs[keyIndex];
   }
   // Pos-edge
