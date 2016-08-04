@@ -1,33 +1,26 @@
 #include "DigiKeyboard.h"
 
-#define PB0 0
-#define PB1 1
-#define PB2 2
-#define PB5 5
-
-byte _inputs[4] = {LOW, LOW, LOW, LOW};
-byte _keyStates[4] = {LOW, LOW, LOW, LOW};
-byte _outputKeys[4] = {KEY_A, KEY_S, KEY_D, KEY_F};
-byte _outputModifiers[4] = {MOD_SHIFT_LEFT, MOD_SHIFT_LEFT, MOD_SHIFT_LEFT, MOD_SHIFT_LEFT};
+const byte _numIOs = 4;
+const byte _pins[_numIOs] = {0, 1, 2, 5};
+const byte _outputKeys[_numIOs] = {KEY_A, KEY_S, KEY_D, KEY_F};
+const byte _outputModifiers[_numIOs] = {MOD_SHIFT_LEFT, MOD_SHIFT_LEFT, MOD_SHIFT_LEFT, MOD_SHIFT_LEFT};
+byte _inputs[_numIOs] = {LOW, LOW, LOW, LOW};
+byte _keyStates[_numIOs] = {LOW, LOW, LOW, LOW};
 
 void setup() {
-  // I/O
-  pinMode(PB0, INPUT);
-  digitalWrite(PB0, HIGH);
-  pinMode(PB1, INPUT);
-  digitalWrite(PB1, HIGH);
-  pinMode(PB2, INPUT);
-  digitalWrite(PB2, HIGH);
-  pinMode(PB5, INPUT);
-  digitalWrite(PB5, HIGH);
+  for (int i = 0; i < _numIOs; i++)
+  {
+    // Set pins to input
+    pinMode(_pins[i], INPUT);
+    // Pull-up
+    digitalWrite(_pins[i], HIGH);
+  }
 }
 
 void ReadInputs()
 {
-  _inputs[0] = digitalRead(PB0);
-  _inputs[1] = digitalRead(PB1);
-  _inputs[2] = digitalRead(PB2);
-  _inputs[3] = digitalRead(PB5);
+  for (int i = 0; i < _numIOs; i++)
+    _inputs[i] = digitalRead(_pins[i]);
 }
 
 void SendKey(int keyIndex)
@@ -51,10 +44,8 @@ void SendKey(int keyIndex)
 
 void SendKeys()
 {
-  for (int i = 0; i < 4; i++)
-  {
+  for (int i = 0; i < _numIOs; i++)
     SendKey(i);
-  }
 }
 
 void loop() {
