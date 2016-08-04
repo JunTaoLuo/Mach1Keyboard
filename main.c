@@ -47,4 +47,8 @@ int main() {
     key = ParseKeyInfo(">!>^>#>+2");
     printf("Key: 0d%d\n", key.Key);
     printf("Modifier: 0x%x\n", key.Modifier);
+
+    key = ParseKeyInfo(">!>^>#>+{Enter}");
+    printf("Key: 0d%d\n", key.Key);
+    printf("Modifier: 0x%x\n", key.Modifier);
 }
