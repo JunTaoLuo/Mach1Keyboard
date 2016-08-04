@@ -38,10 +38,10 @@
 // Typedef
 typedef unsigned char byte;
 
-struct KeyInfo {
+typedef struct {
     byte Key;
     byte Modifier;
-};
+} KeyInfo;
 
 byte ParseModifier(char modifier) {
     switch (modifier) {
@@ -109,8 +109,8 @@ byte ParseLiteralKey(char* key) {
     return 0;
 }
 
-struct KeyInfo ParseKeyInfo(char* keyString) {
-    struct KeyInfo keyInfo;
+KeyInfo ParseKeyInfo(char* keyString) {
+    KeyInfo keyInfo;
     keyInfo.Key = 0;
     keyInfo.Modifier = 0;
     byte index;
